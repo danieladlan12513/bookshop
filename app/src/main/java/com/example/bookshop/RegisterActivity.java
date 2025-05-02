@@ -2,6 +2,7 @@ package com.example.bookshop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText edtEmail, edtPassword, edtConfirmPassword;
-    private Button btnRegister, btnBackToLogin ;
+    private Button btnRegister, btnBackToLogin;
     private FirebaseAuth mAuth;
 
     @Override
@@ -30,42 +31,46 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         btnBackToLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, LoginActivity.class));
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
 
-        btnRegister.setOnClickListener(v -> {
-            String email = edtEmail.getText().toString().trim();
-            String password = edtPassword.getText().toString().trim();
-            String confirmPassword = edtConfirmPassword.getText().toString().trim();
+        btnRegister.setOnClickListener(v -> registerUser());
+    }
 
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(RegisterActivity.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void registerUser() {
+        String email = edtEmail.getText().toString().trim();
+        String password = edtPassword.getText().toString().trim();
+        String confirmPassword = edtConfirmPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showToast("Minden mezőt ki kell tölteni!");
+            return;
+        }
 
-            if (!password.equals(confirmPassword)) {
-                Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showToast("Érvénytelen email cím!");
+            return;
+        }
 
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(RegisterActivity.this, task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        });
+        if (!password.equals(confirmPassword)) {
+            showToast("A jelszavak nem egyeznek!");
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        showToast("Sikeres regisztráció!");
+                        startActivity(new Intent(this, LoginActivity.class));
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    } else {
+                        showToast("Hiba: " + task.getException().getMessage());
+                    }
+                });
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

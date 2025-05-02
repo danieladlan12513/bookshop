@@ -1,23 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="20dp"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/txtEmail"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Welcome, User"
-        android:textSize="18sp"
-        android:layout_marginBottom="30dp"/>
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/txtEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Helló, User"
+            android:textSize="18sp"
+            android:layout_marginBottom="30dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        android:padding="10dp"/>
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnAddBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📚 Könyv hozzáadása"
+            android:padding="10dp"
+            />
+
+        <Button
+            android:id="@+id/btnBookList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📖 Könyvek listája"
+            android:layout_marginTop="10dp"/>
+
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🚪 Kijelentkezés"
+            android:padding="10dp"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
 </LinearLayout>
